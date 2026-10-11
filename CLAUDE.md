@@ -74,9 +74,10 @@ l'heure de pointe. `audio.setTheme(city, level)` avant `startMusic()`. Le contex
 geste (`main.jsx`).
 
 **PWA.** `public/manifest.webmanifest`, `public/icons/`, `public/sw.js` (enregistré seulement en production
-dans `main.jsx`). `VERSION` dans `sw.js` vaut `metrorush-__BUILD_ID__` : un petit plugin de `vite.config.js`
-remplace ce marqueur par la date et l'heure du build dans `dist/sw.js`, pour que les téléphones remplacent
-l'ancien cache à chaque publication. Ne pas modifier le marqueur à la main. L'installation exige une adresse HTTPS (ou localhost). Déploiement Netlify configuré par
+dans `main.jsx`). `public/sw.js` contient deux marqueurs que le plugin `serviceWorkerVersion` de
+`vite.config.js` remplace dans `dist/sw.js` : `__BUILD_ID__` (date et heure du build, pour que les téléphones
+remplacent l'ancien cache à chaque publication) et `__PRECACHE__` (liste de tous les fichiers du build,
+téléchargés dès l'installation avec les polices Google). `public/sw.js` n'est donc pas exécutable tel quel. L'installation exige une adresse HTTPS (ou localhost). Déploiement Netlify configuré par
 `netlify.toml` à la racine (base `metrorush`, publication `dist`, en-têtes de cache pour `sw.js` et `assets/`).
 Netlify compile sous Linux : la casse des chemins d'import doit correspondre exactement aux noms de fichiers.
 
