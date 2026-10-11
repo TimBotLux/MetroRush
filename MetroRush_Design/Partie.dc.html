@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>MetroRush · Partie</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1D2B53}a:hover{color:#0F1836}
+@keyframes mrPulse{0%{transform:scale(0.8);opacity:0.95}100%{transform:scale(1.3);opacity:0.15}}
+@keyframes mrBlink{0%,100%{opacity:1}50%{opacity:0.25}}
+</style>
+</helmet>
+<div style="position: relative; width: 844px; height: 390px; overflow: hidden; background: linear-gradient(135deg, #120B3D 0%, #2B1470 45%, #5A1A7A 75%, #8A1F6B 100%); font-family: 'Nunito', sans-serif; color: #FFFFFF">
+
+  <div style="position: absolute; left: 0; top: 0; width: 844px; height: 56px; box-sizing: border-box; padding: 0 14px; background: rgba(8,4,32,0.55); border-bottom: 1px solid rgba(255,255,255,0.14); color: #FFFFFF; display: flex; align-items: center; gap: 10px">
+    <a href="Pause.dc.html" aria-label="Pause" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.14)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>
+    </a>
+    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 12px; background: rgba(255,255,255,0.14); font-weight: 800; font-size: 15px">
+      {{cityLabel}}
+      <span aria-hidden="true" style="display: flex; gap: 3px">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: {{dot1}}"></span>
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: {{dot2}}"></span>
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: {{dot3}}"></span>
+      </span>
+      <span style="font-weight: 700; opacity: 0.85">{{levelLabel}}</span>
+    </div>
+    <div style="flex: 1"></div>
+    <div style="display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 10px; border-radius: 12px; background: rgba(255,255,255,0.14); font-weight: 800; font-size: 15px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14"/><path d="M9 21l2-4"/><path d="M15 21l-2-4"/></svg>
+      {{trainCount}} rames
+    </div>
+    <button type="button" aria-label="Musique et annonces" aria-pressed="{{musicPressed}}" onClick="{{toggleMusic}}" style="display: flex; align-items: center; justify-content: center; gap: 6px; height: 44px; padding: 0 12px; border: none; border-radius: 14px; background: {{musicBg}}; color: {{musicFg}}; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px; cursor: pointer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{musicFg}}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      {{musicText}}
+    </button>
+    <div style="display: flex; align-items: baseline; gap: 8px">
+      <span style="font-weight: 800; font-size: 12px; letter-spacing: 1px; opacity: 0.8">SCORE</span>
+      <span style="font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 28px">{{score}}</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; border-radius: 12px; background: {{timerBg}}; color: #FFFFFF">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
+      <span style="font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 22px">{{timer}}</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; border-radius: 12px; background: rgba(255,255,255,0.14)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFC93C" aria-hidden="true"><path d="M12 2l2.2 5.6L20 6l-2.6 5.2L22 15l-5.8.6L15 22l-3-5-3 5-1.2-6.4L2 15l4.6-3.8L4 6l5.8 1.6z"/></svg>
+      <span style="font-weight: 800; font-size: 15px">Chocs</span>
+      <span style="font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 20px">{{collisions}}</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 0; top: 56px; width: 844px; height: 334px">
+    <sc-for list="{{segs}}" as="s" hint-placeholder-count="8">
+      <div style="position: absolute; left: {{s.x}}px; top: {{s.y}}px; width: {{s.w}}px; height: {{s.h}}px; border-radius: 6px; background: {{s.c}}; transform: rotate({{s.a}}deg); transform-origin: 0 50%; box-shadow: {{s.sh}}"></div>
+    </sc-for>
+    <sc-for list="{{joints}}" as="j" hint-placeholder-count="6">
+      <div style="position: absolute; left: {{j.x}}px; top: {{j.y}}px; width: 8px; height: 8px; border-radius: 50%; background: {{j.c}}"></div>
+    </sc-for>
+
+    <sc-if value="{{halo.show}}" hint-placeholder-val="{{ true }}">
+      <div style="position: absolute; left: {{halo.x}}px; top: {{halo.y}}px; width: {{halo.size}}px; height: {{halo.size}}px; border-radius: 50%; background: rgba(224,65,47,0.16); border: 3px dashed #E0412F; box-sizing: border-box; animation: mrPulse 1.1s ease-out infinite alternate"></div>
+    </sc-if>
+
+    <sc-for list="{{crossings}}" as="x" hint-placeholder-count="4">
+      <div style="position: absolute; left: {{x.x}}px; top: {{x.y}}px; width: 16px; height: 16px; border-radius: 50%; background: #FFFFFF; border: 3px solid #1D2B53; box-sizing: border-box"></div>
+    </sc-for>
+
+    <sc-for list="{{termini}}" as="t" hint-placeholder-count="3">
+      <div style="position: absolute; left: {{t.x}}px; top: {{t.y}}px; height: 20px; min-width: 22px; padding: 0 6px; box-sizing: border-box; border-radius: 7px; background: {{t.c}}; color: {{t.tc}}; border: 2px solid #FFFFFF; font-weight: 800; font-size: 11px; line-height: 16px; text-align: center; white-space: nowrap">{{t.n}}</div>
+    </sc-for>
+
+    <sc-if value="{{showNames}}" hint-placeholder-val="{{ true }}">
+      <sc-for list="{{labels}}" as="l" hint-placeholder-count="3">
+        <div style="position: absolute; left: {{l.x}}px; top: {{l.y}}px; padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,0.92); font-weight: 800; font-size: 10px; white-space: nowrap">{{l.t}}</div>
+      </sc-for>
+    </sc-if>
+
+    <sc-for list="{{trains}}" as="r" hint-placeholder-count="4">
+      <div style="position: absolute; left: {{r.x}}px; top: {{r.y}}px; width: 30px; height: 16px; box-sizing: border-box; border-radius: 6px; background: {{r.c}}; border: 2.5px solid #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,0.35); transform: rotate({{r.a}}deg); animation: {{r.anim}}"></div>
+    </sc-for>
+
+    <sc-for list="{{lights}}" as="l" hint-placeholder-count="4">
+      <button type="button" aria-label="{{l.aria}}" onClick="{{l.toggle}}" style="position: absolute; left: {{l.x}}px; top: {{l.y}}px; width: 44px; height: 44px; padding: 0; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; box-sizing: border-box; border-radius: {{l.rad}}; background: {{l.bg}}; border: 3px solid #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.35)">
+          <sc-if value="{{l.green}}" hint-placeholder-val="{{ true }}">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
+          </sc-if>
+          <sc-if value="{{l.red}}" hint-placeholder-val="{{ false }}">
+            <span style="width: 12px; height: 3px; border-radius: 2px; background: #FFFFFF"></span>
+          </sc-if>
+        </span>
+      </button>
+    </sc-for>
+
+    <sc-if value="{{ann.show}}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="position: absolute; left: 202px; top: 256px; width: 440px; box-sizing: border-box; padding: 10px 14px; border-radius: 16px; background: #FFFFFF; border: 3px solid #1D2B53; box-shadow: 0 4px 0 #1D2B53; display: flex; align-items: center; gap: 12px">
+        <span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; background: #1D2B53; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFC93C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
+        </span>
+        <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; line-height: 1.15">{{ann.text}}</span>
+          <span style="font-weight: 700; font-size: 13px; color: #4A5370">{{ann.fr}}</span>
+        </span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{bubble.show}}" hint-placeholder-val="{{ true }}">
+      <div style="position: absolute; left: {{bubble.x}}px; top: {{bubble.y}}px; width: 170px; padding: 8px 12px; border-radius: 14px; background: #FFC93C; color: #1D2B53; font-weight: 800; font-size: 13px; line-height: 1.3; box-shadow: 0 3px 0 rgba(0,0,0,0.2)">Attention ! Deux rames arrivent à ce croisement.</div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"city":{"editor":"enum","options":["berlin","london","paris"],"default":"berlin","section":"Partie"},"level":{"editor":"enum","options":["facile","moyen","difficile"],"default":"facile","section":"Partie"},"lastSeconds":{"editor":"boolean","default":false,"section":"Partie"},"stationNames":{"editor":"boolean","default":true,"section":"Partie"},"announcePreview":{"editor":"boolean","default":false,"section":"Partie"},"$preview":{"width":844,"height":390}}'>
+const MR_CITIES = {
+  berlin: {
+    label: 'Berlin',
+    lines: [
+      { n: 'U2', c: '#DA421E', p: [[30, 170], [810, 170]] },
+      { n: 'U6', c: '#8C6DAB', p: [[300, 20], [300, 310]] },
+      { n: 'U8', c: '#224F86', p: [[560, 20], [560, 100], [640, 180], [640, 310]] },
+      { n: 'U7', c: '#3690C0', p: [[30, 260], [410, 260], [610, 60], [810, 60]] },
+      { n: 'U5', c: '#7E5330', p: [[720, 310], [720, 120]] },
+      { n: 'U1', c: '#7DAD4C', p: [[30, 110], [470, 110]] }
+    ],
+    names: { '0-1': 'Stadtmitte', '0-2': 'Alexanderplatz', '1-3': 'Mehringdamm', '2-3': 'Hermannplatz', '0-3': 'Bismarckstraße', '1-5': 'Hallesches Tor' }
+  },
+  london: {
+    label: 'Londres',
+    lines: [
+      { n: 'Circle', c: '#FFD300', tc: '#1D2B53', edge: '#B8960A', p: [[30, 220], [810, 220]] },
+      { n: 'District', c: '#00843D', shared: [2], p: [[30, 300], [360, 300], [440, 220], [620, 220], [700, 300], [810, 300]] },
+      { n: 'Northern', c: '#1C1C1C', p: [[230, 20], [230, 310]] },
+      { n: 'Central', c: '#DC241F', p: [[30, 120], [810, 120]] },
+      { n: 'Piccadilly', c: '#0019A8', p: [[30, 40], [680, 40], [760, 120], [760, 310]] },
+      { n: 'Victoria', c: '#0098D4', p: [[340, 310], [340, 20]] }
+    ],
+    names: { '0-1': 'Gloucester Road', '0-2': "King's Cross", '1-2': 'Embankment', '2-3': 'Bank', '3-4': 'Holborn', '1-4': "Earl's Court", '0-5': 'Victoria', '3-5': 'Oxford Circus', '2-4': 'Leicester Square' }
+  },
+  paris: {
+    label: 'Paris',
+    lines: [
+      { n: '1', c: '#FFCD00', tc: '#1D2B53', edge: '#B89200', p: [[30, 170], [810, 170]] },
+      { n: '4', c: '#C04191', p: [[380, 20], [380, 310]] },
+      { n: '7', c: '#FA9ABA', tc: '#1D2B53', p: [[600, 20], [460, 160], [460, 310]] },
+      { n: '11', c: '#8D5E2A', p: [[810, 90], [220, 90], [150, 20]] },
+      { n: '14', c: '#62259D', p: [[30, 250], [560, 250], [700, 110], [810, 110]] },
+      { n: '9', c: '#B6BD00', tc: '#1D2B53', p: [[130, 20], [130, 310]] }
+    ],
+    names: { '0-1': 'Châtelet', '0-2': 'Palais Royal', '0-4': 'Gare de Lyon', '2-4': 'Pyramides', '0-5': 'Franklin D. Roosevelt' }
+  }
+};
+
+const MR_LEVELS = {
+  facile: { label: 'Facile', n: 3, maxTrains: 4, aid: 'full', over: false, score: 12, chocs: 1 },
+  moyen: { label: 'Moyen', n: 5, maxTrains: 8, aid: 'short', over: true, score: 21, chocs: 2 },
+  difficile: { label: 'Difficile', n: 8, maxTrains: 15, aid: 'none', over: true, score: 34, chocs: 3 }
+};
+
+const MR_SAFETY = [
+  { say: 'Attention à la fermeture des portes.', sub: 'Message de sécurité' },
+  { say: 'Pour votre sécurité, tenez-vous éloignés de la bordure du quai.', sub: 'Message de sécurité' },
+  { say: 'Pensez à laisser descendre les voyageurs avant de monter.', sub: 'Message aux voyageurs' }
+];
+function mrAnnouncements(key) {
+  const city = MR_CITIES[key];
+  return Object.keys(city.names).map((k) => {
+    const ij = k.split('-').map(Number);
+    const a = city.lines[ij[0]].n, b = city.lines[ij[1]].n;
+    const nm = city.names[k];
+    return {
+      say: 'Prochaine station : ' + nm + '. Correspondance avec les lignes ' + a + ' et ' + b + '.',
+      title: 'Prochaine station : ' + nm,
+      sub: 'Correspondance : lignes ' + a + ' et ' + b
+    };
+  });
+}
+const MR_SPAWN = { facile: 8000, moyen: 5000, difficile: 3000 };
+const MR_LEAD = [72, null, 76, null, 79, null, 76, null, 74, null, 77, null, 81, null, 77, null, 72, null, 76, 79, 84, null, 79, 76, 74, null, 71, 74, 79, null, null, null];
+const MR_BASS = [36, 36, 43, 43, 45, 45, 41, 43];
+function mrHz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+
+function mrCross(a, b, c, d) {
+  const rx = b[0] - a[0], ry = b[1] - a[1], sx = d[0] - c[0], sy = d[1] - c[1];
+  const den = rx * sy - ry * sx;
+  if (Math.abs(den) < 1e-9) return null;
+  const qx = c[0] - a[0], qy = c[1] - a[1];
+  const t = (qx * sy - qy * sx) / den;
+  const u = (qx * ry - qy * rx) / den;
+  if (t < 0.001 || t > 1.0001 || u < 0.001 || u > 1.0001) return null;
+  return { x: a[0] + t * rx, y: a[1] + t * ry, t: t, u: u };
+}
+
+function mrPointAt(p, f) {
+  let total = 0;
+  const lens = [];
+  for (let i = 0; i < p.length - 1; i++) {
+    const l = Math.hypot(p[i + 1][0] - p[i][0], p[i + 1][1] - p[i][1]);
+    lens.push(l);
+    total += l;
+  }
+  let d = f * total;
+  for (let i = 0; i < lens.length; i++) {
+    if (d <= lens[i] || i === lens.length - 1) {
+      const k = Math.min(1, d / lens[i]);
+      const ax = p[i][0], ay = p[i][1], bx = p[i + 1][0], by = p[i + 1][1];
+      return { x: ax + (bx - ax) * k, y: ay + (by - ay) * k, a: Math.atan2(by - ay, bx - ax) * 180 / Math.PI };
+    }
+    d -= lens[i];
+  }
+  return { x: p[0][0], y: p[0][1], a: 0 };
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { flip: {}, music: false, ann: null, live: null };
+  }
+
+  componentWillUnmount() { this.stopMusic(); }
+
+  cityKey() { return MR_CITIES[this.props.city] ? this.props.city : 'berlin'; }
+
+  startMusic() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    if (!this.ac) this.ac = new AC();
+    if (this.ac.state === 'suspended') this.ac.resume();
+    this.master = this.ac.createGain();
+    this.master.gain.value = 0.16;
+    this.master.connect(this.ac.destination);
+    const lvlKey = MR_LEVELS[this.props.level] ? this.props.level : 'facile';
+    this.maxLive = MR_LEVELS[lvlKey].maxTrains;
+    this.live = Math.min(2, this.maxLive);
+    this.spawnTimer = setInterval(() => this.spawn(), MR_SPAWN[lvlKey]);
+    this.stepDur = 60 / 110 / 4;
+    this.step = 0;
+    this.nextT = this.ac.currentTime + 0.05;
+    this.tick = setInterval(() => this.schedule(), 25);
+    this.annIdx = 0;
+    this.annTimer = setTimeout(() => this.announce(), 2500);
+    return true;
+  }
+
+  stopMusic() {
+    clearInterval(this.tick);
+    clearInterval(this.spawnTimer);
+    clearTimeout(this.annTimer);
+    clearTimeout(this.annHide);
+    clearTimeout(this.annSpeak);
+    this.tick = null;
+    if (this.master) { try { this.master.disconnect(); } catch (e) {} this.master = null; }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+
+  schedule() {
+    if (!this.master) return;
+    while (this.nextT < this.ac.currentTime + 0.12) {
+      this.stepDur = 60 / Math.min(180, 96 + 6 * (this.live || 2)) / 4;
+      const s = this.step % 32;
+      const t = this.nextT;
+      const lead = MR_LEAD[s];
+      if (lead) this.note(lead, t, this.stepDur * 1.6, 'square', 0.12);
+      if (s % 4 === 0) this.note(MR_BASS[s / 4], t, this.stepDur * 3.5, 'triangle', 0.5);
+      if (s % 8 === 0) this.kick(t);
+      if (s % 2 === 1 || (this.live >= 6 && s % 2 === 0)) this.hat(t);
+      if (this.live >= 10 && lead) this.note(lead + 12, t, this.stepDur * 1.2, 'square', 0.05);
+      this.nextT += this.stepDur;
+      this.step += 1;
+    }
+  }
+
+  note(m, t, d, type, v, out) {
+    const o = this.ac.createOscillator();
+    const g = this.ac.createGain();
+    o.type = type;
+    o.frequency.value = mrHz(m);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(v, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g);
+    g.connect(out || this.master);
+    o.start(t);
+    o.stop(t + d + 0.05);
+  }
+
+  kick(t) {
+    const o = this.ac.createOscillator();
+    const g = this.ac.createGain();
+    o.frequency.setValueAtTime(140, t);
+    o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
+    g.gain.setValueAtTime(0.7, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+    o.connect(g);
+    g.connect(this.master);
+    o.start(t);
+    o.stop(t + 0.2);
+  }
+
+  hat(t) {
+    if (!this.noise) {
+      const len = Math.floor(this.ac.sampleRate * 0.05);
+      this.noise = this.ac.createBuffer(1, len, this.ac.sampleRate);
+      const data = this.noise.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+    }
+    const src = this.ac.createBufferSource();
+    src.buffer = this.noise;
+    const f = this.ac.createBiquadFilter();
+    f.type = 'highpass';
+    f.frequency.value = 7000;
+    const g = this.ac.createGain();
+    g.gain.setValueAtTime(0.1, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+    src.connect(f);
+    f.connect(g);
+    g.connect(this.master);
+    src.start(t);
+  }
+
+  unduck() {
+    if (this.master) this.master.gain.setTargetAtTime(0.16, this.ac.currentTime, 0.3);
+  }
+
+  announce() {
+    if (!this.master) return;
+    const key = this.cityKey();
+    const list = mrAnnouncements(key);
+    const idx = this.annIdx;
+    this.annIdx += 1;
+    const item = idx % 3 === 2
+      ? MR_SAFETY[Math.floor(idx / 3) % MR_SAFETY.length]
+      : list[(idx - Math.floor(idx / 3)) % list.length];
+    const text = item.say;
+    this.master.gain.setTargetAtTime(0.04, this.ac.currentTime, 0.1);
+    const t = this.ac.currentTime + 0.05;
+    [79, 84, 88].forEach((m, i) => this.note(m, t + i * 0.28, 1.2, 'sine', 0.3, this.ac.destination));
+    this.annSpeak = setTimeout(() => {
+      if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
+        const u = new window.SpeechSynthesisUtterance(text);
+        u.lang = 'fr-FR';
+        u.rate = 0.95;
+        u.onend = () => this.unduck();
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } else {
+        this.unduck();
+      }
+    }, 950);
+    this.setState({ ann: { text: item.title || item.say, fr: item.sub } });
+    clearTimeout(this.annHide);
+    this.annHide = setTimeout(() => { this.setState({ ann: null }); this.unduck(); }, 6500);
+    this.annTimer = setTimeout(() => this.announce(), 15000);
+  }
+
+  spawn() {
+    if (!this.master || this.live >= this.maxLive) return;
+    this.live += 1;
+    const t = this.ac.currentTime + 0.01;
+    this.note(76, t, 0.12, 'triangle', 0.3);
+    this.note(83, t + 0.1, 0.18, 'triangle', 0.3);
+    this.setState({ live: this.live });
+  }
+
+  blip(green) {
+    if (!this.master) return;
+    this.note(green ? 84 : 67, this.ac.currentTime + 0.01, 0.09, 'square', 0.25);
+  }
+
+  renderVals() {
+    const cityKey = MR_CITIES[this.props.city] ? this.props.city : 'berlin';
+    const levelKey = MR_LEVELS[this.props.level] ? this.props.level : 'facile';
+    const city = MR_CITIES[cityKey];
+    const lv = MR_LEVELS[levelKey];
+    const lines = city.lines.slice(0, Math.min(lv.n, city.lines.length));
+
+    const segs = [];
+    const joints = [];
+    lines.forEach((ln) => {
+      for (let i = 0; i < ln.p.length - 1; i++) {
+        const a = ln.p[i], b = ln.p[i + 1];
+        const wide = ln.shared && ln.shared.indexOf(i) >= 0;
+        const h = wide ? 16 : 8;
+        segs.push({
+          wide: wide,
+          x: a[0], y: a[1] - h / 2, h: h,
+          w: Math.round(Math.hypot(b[0] - a[0], b[1] - a[1])),
+          a: Math.round(Math.atan2(b[1] - a[1], b[0] - a[0]) * 1800 / Math.PI) / 10,
+          c: ln.c,
+          sh: '0 0 12px ' + ln.c + ', 0 0 0 2px rgba(255,255,255,0.85)'
+        });
+        if (i > 0) joints.push({ x: a[0] - 4, y: a[1] - 4, c: ln.c });
+      }
+    });
+    segs.sort((s1, s2) => (s2.wide ? 1 : 0) - (s1.wide ? 1 : 0));
+
+    const crossings = [];
+    const seen = {};
+    for (let i = 0; i < lines.length; i++) {
+      for (let j = i + 1; j < lines.length; j++) {
+        const A = lines[i].p, B = lines[j].p;
+        for (let si = 0; si < A.length - 1; si++) {
+          for (let sj = 0; sj < B.length - 1; sj++) {
+            const r = mrCross(A[si], A[si + 1], B[sj], B[sj + 1]);
+            if (!r) continue;
+            const key = Math.round(r.x) + ',' + Math.round(r.y);
+            if (seen[key]) continue;
+            seen[key] = true;
+            crossings.push({ x: r.x, y: r.y, i: i, j: j, si: si, sj: sj });
+          }
+        }
+      }
+    }
+
+    const flip = this.state.flip;
+    const lights = [];
+    crossings.forEach((cr, ci) => {
+      [[cr.i, cr.si], [cr.j, cr.sj]].forEach((pair, k) => {
+        const ln = lines[pair[0]];
+        const a = ln.p[pair[1]], b = ln.p[pair[1] + 1];
+        const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+        const dx = (b[0] - a[0]) / len, dy = (b[1] - a[1]) / len;
+        const lx = cr.x - dx * 30, ly = cr.y - dy * 30;
+        const id = ci * 2 + k;
+        const base = k === 1;
+        const green = flip[id] ? !base : base;
+        lights.push({
+          x: Math.round(lx - 22), y: Math.round(ly - 22),
+          green: green, red: !green,
+          bg: green ? '#17A34A' : '#DC2F21',
+          rad: green ? '50%' : '8px',
+          aria: 'Feu de la ligne ' + ln.n + ' : ' + (green ? 'vert' : 'rouge'),
+          toggle: () => {
+            const next = Object.assign({}, this.state.flip);
+            next[id] = !next[id];
+            this.blip(!green);
+            this.setState({ flip: next });
+          }
+        });
+      });
+    });
+
+    const baseTrains = Math.min(lv.maxTrains, lines.length === 3 ? 3 : lines.length * 2);
+    const nTrains = this.state.live != null ? this.state.live : baseTrains;
+    const trains = [];
+    for (let k = 0; k < nTrains; k++) {
+      const ln = lines[k % lines.length];
+      const f = k < lines.length ? 0.16 + 0.1 * (k % 3) : k < lines.length * 2 ? 0.7 + 0.08 * (k % 2) : 0.42 + 0.06 * (k % 3);
+      const pt = mrPointAt(ln.p, f);
+      trains.push({
+        x: Math.round(pt.x - 15), y: Math.round(pt.y - 8),
+        a: Math.round(pt.a), c: ln.c,
+        anim: k === 1 ? 'mrBlink 0.8s ease-in-out infinite' : 'none'
+      });
+    }
+
+    const termini = lines.map((ln) => ({
+      x: ln.p[0][0] - 11, y: ln.p[0][1] - 10, n: ln.n, c: ln.c, tc: ln.tc || '#FFFFFF'
+    }));
+
+    const labels = [];
+    crossings.forEach((cr) => {
+      const t = city.names[cr.i + '-' + cr.j];
+      if (t) labels.push({ x: Math.round(cr.x + 10), y: Math.round(cr.y + 10), t: t });
+    });
+
+    const c0 = crossings[0];
+    const haloSize = lv.aid === 'full' ? 70 : 52;
+    const halo = {
+      show: lv.aid !== 'none' && !!c0,
+      size: haloSize,
+      x: c0 ? Math.round(c0.x - haloSize / 2) : 0,
+      y: c0 ? Math.round(c0.y - haloSize / 2) : 0
+    };
+    const bubble = {
+      show: lv.aid === 'full' && !!c0,
+      x: c0 ? Math.round(Math.min(640, c0.x + 40)) : 0,
+      y: c0 ? Math.round(Math.max(8, c0.y - 96)) : 0
+    };
+
+    const music = !!this.state.music;
+    const firstAnn = mrAnnouncements(cityKey)[0];
+    let ann = { show: false, text: '', fr: '' };
+    if (this.state.ann) ann = { show: true, text: this.state.ann.text, fr: this.state.ann.fr };
+    else if (this.props.announcePreview === true || this.props.announcePreview === 'true') ann = { show: true, text: firstAnn.title, fr: firstAnn.sub };
+
+    const dotOn = '#FFC93C', dotOff = '#4E5C8E';
+    const lvlN = levelKey === 'facile' ? 1 : levelKey === 'moyen' ? 2 : 3;
+    const last = !!this.props.lastSeconds;
+
+    return {
+      cityLabel: city.label,
+      levelLabel: lv.label,
+      dot1: dotOn, dot2: lvlN >= 2 ? dotOn : dotOff, dot3: lvlN >= 3 ? dotOn : dotOff,
+      score: lv.score,
+      timer: last ? '0:08' : '2:14',
+      timerBg: last ? '#C02619' : 'rgba(255,255,255,0.14)',
+      collisions: lv.over ? lv.chocs + ' / 5' : String(lv.chocs),
+      segs: segs, joints: joints,
+      crossings: crossings.map((c) => ({ x: Math.round(c.x - 8), y: Math.round(c.y - 8) })),
+      lights: lights, trains: trains, termini: termini,
+      labels: labels,
+      showNames: this.props.stationNames !== false,
+      halo: halo, bubble: bubble,
+      ann: ann,
+      trainCount: nTrains,
+      musicPressed: music ? 'true' : 'false',
+      musicBg: music ? '#FFC93C' : 'rgba(255,255,255,0.14)',
+      musicFg: music ? '#1D2B53' : '#FFFFFF',
+      musicText: music ? 'Son' : 'Son coupé',
+      toggleMusic: () => {
+        if (this.state.music) {
+          this.stopMusic();
+          this.setState({ music: false, ann: null, live: null });
+        } else if (this.startMusic()) {
+          this.setState({ music: true, live: this.live });
+        }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

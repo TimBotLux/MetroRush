@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>MetroRush · Résultats</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1D2B53}a:hover{color:#0F1836}
+</style>
+</helmet>
+<div style="position: relative; width: 844px; height: 390px; overflow: hidden; background: {{ground}}; font-family: 'Nunito', sans-serif; color: #FFFFFF; box-sizing: border-box; padding: 28px 40px; display: flex; flex-direction: column; gap: 18px">
+  <div style="display: flex; align-items: flex-start; gap: 28px">
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-weight: 800; font-size: 15px">Berlin · {{levelLabel}}</div>
+      <h1 style="margin: 0; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 54px; line-height: 1; color: {{titleColor}}">{{title}}</h1>
+      <p style="margin: 0; font-size: 17px; font-weight: 700; line-height: 1.4">{{subtitle}}</p>
+      <sc-if value="{{record}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; align-items: center; gap: 10px; align-self: flex-start; margin-top: 4px; padding: 10px 16px; border-radius: 16px; background: #FFC93C; box-shadow: 0 4px 0 #C98A00; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 20px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#1D2B53" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg>
+          Nouveau record !
+        </div>
+      </sc-if>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: 380px">
+      <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+        <div style="padding: 12px 16px; border-radius: 18px; background: #FFFFFF; border: 3px solid #1D2B53; color: #1D2B53; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-weight: 800; font-size: 13px">{{s.label}}</span>
+          <span style="font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 34px; line-height: 1.1; color: {{s.color}}">{{s.value}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 14px; margin-top: auto">
+    <a href="Partie.dc.html" style="display: flex; align-items: center; justify-content: center; gap: 10px; height: 58px; padding: 0 34px; border-radius: 18px; background: #FFC93C; color: #1D2B53; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 24px; text-decoration: none; box-shadow: 0 5px 0 #C98A00">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D2B53" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      Rejouer
+    </a>
+    <a href="Difficulte.dc.html" style="display: flex; align-items: center; height: 50px; padding: 0 20px; border-radius: 16px; background: #FFFFFF; border: 3px solid #1D2B53; color: #1D2B53; font-weight: 800; font-size: 16px; text-decoration: none; box-shadow: 0 4px 0 #1D2B53">Changer de niveau</a>
+    <a href="Main.dc.html" style="display: flex; align-items: center; height: 50px; padding: 0 20px; border-radius: 16px; background: #FFFFFF; border: 3px solid #1D2B53; color: #1D2B53; font-weight: 800; font-size: 16px; text-decoration: none; box-shadow: 0 4px 0 #1D2B53">Accueil</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"gameOver":{"editor":"boolean","default":false},"level":{"editor":"enum","options":["facile","moyen","difficile"],"default":"facile"},"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const over = this.props.gameOver === true || this.props.gameOver === 'true';
+    const lvl = this.props.level || (over ? 'moyen' : 'facile');
+    const labels = { facile: 'Facile', moyen: 'Moyen', difficile: 'Difficile' };
+    if (over) {
+      return {
+        ground: 'linear-gradient(120deg, #3B0A45 0%, #8E1450 45%, #E01E5A 80%, #FF5C38 100%)',
+        levelLabel: labels[lvl] || 'Moyen',
+        title: 'Game over',
+        titleColor: '#FFFFFF',
+        subtitle: '5 chocs, la partie s’arrête. Pense à mettre un feu au rouge plus tôt !',
+        record: false,
+        stats: [
+          { label: 'Score', value: '6', color: '#1D2B53' },
+          { label: 'Rames arrivées', value: '11', color: '#1D2B53' },
+          { label: 'Chocs', value: '5 / 5', color: '#B3261A' },
+          { label: 'Ton record', value: '14', color: '#1D2B53' }
+        ]
+      };
+    }
+    return {
+      ground: 'linear-gradient(120deg, #4F2BFF 0%, #A23CFF 40%, #FF3D8B 75%, #FF6A3D 100%)',
+      levelLabel: labels[lvl] || 'Facile',
+      title: 'Bravo !',
+      titleColor: '#FFFFFF',
+      subtitle: 'Le temps est écoulé. Tu as fait mieux que la dernière fois.',
+      record: true,
+      stats: [
+        { label: 'Score', value: '18', color: '#1D2B53' },
+        { label: 'Rames arrivées', value: '20', color: '#1D2B53' },
+        { label: 'Chocs', value: '2', color: '#1D2B53' },
+        { label: 'Ton record', value: '18', color: '#1D2B53' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

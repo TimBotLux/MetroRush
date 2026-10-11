@@ -1,0 +1,10 @@
+# Dépendances et fichiers générés (recréés par npm install / npm run build)
+node_modules/
+dist/
+
+# Configuration locale de Claude Code et de l'éditeur
+.claude/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log

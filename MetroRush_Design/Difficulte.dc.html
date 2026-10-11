@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>MetroRush · Choix du niveau</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1D2B53}a:hover{color:#0F1836}
+</style>
+</helmet>
+<div style="position: relative; width: 844px; height: 390px; overflow: hidden; background: linear-gradient(120deg, #4F2BFF 0%, #A23CFF 40%, #FF3D8B 75%, #FF6A3D 100%); font-family: 'Nunito', sans-serif; color: #FFFFFF; box-sizing: border-box; padding: 20px 40px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; align-items: center; gap: 16px">
+    <a href="Ville.dc.html" aria-label="Retour au choix de la ville" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #1D2B53">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <h1 style="margin: 0; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 34px">Choisis ton niveau</h1>
+    <div style="margin-left: auto; padding: 6px 14px; border-radius: 12px; background: #FFFFFF; border: 2px solid #1D2B53; color: #1D2B53; font-weight: 800; font-size: 15px">Berlin</div>
+  </div>
+
+  <div role="radiogroup" aria-label="Niveau de difficulté" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <sc-for list="{{levels}}" as="lv" hint-placeholder-count="3">
+      <button type="button" role="radio" aria-checked="{{lv.checked}}" onClick="{{lv.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px; border-radius: 22px; background: {{lv.bg}}; border: {{lv.border}}; box-shadow: 0 5px 0 #1D2B53; text-align: left; font-family: 'Nunito', sans-serif; color: #1D2B53; cursor: pointer">
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
+          <span style="font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 26px">{{lv.label}}</span>
+          <span aria-hidden="true" style="display: flex; gap: 4px">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: {{lv.d1}}"></span>
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: {{lv.d2}}"></span>
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: {{lv.d3}}"></span>
+          </span>
+        </div>
+        <sc-for list="{{lv.facts}}" as="f" hint-placeholder-count="4">
+          <span style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; line-height: 1.25">
+            <span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 50%; background: #1D2B53; flex-shrink: 0"></span>{{f.t}}
+          </span>
+        </sc-for>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="display: flex; justify-content: center; margin-top: 6px">
+    <a href="Partie.dc.html" style="display: flex; align-items: center; justify-content: center; gap: 10px; height: 58px; padding: 0 40px; border-radius: 18px; background: #FFC93C; color: #1D2B53; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 24px; text-decoration: none; box-shadow: 0 5px 0 #C98A00">C'est parti !</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { picked: 'facile' };
+  }
+  renderVals() {
+    const data = [
+      { id: 'facile', label: 'Facile', n: 1, facts: ['3 lignes', '4 rames au maximum', 'Aide : halo rouge sur les dangers', 'Pas de game over'] },
+      { id: 'moyen', label: 'Moyen', n: 2, facts: ['5 lignes', '8 rames au maximum', 'Aide : halo 1 s avant', 'Game over à 5 collisions'] },
+      { id: 'difficile', label: 'Difficile', n: 3, facts: ['Toutes les lignes', '15 rames au maximum', 'Aucune aide', 'Game over à 5 collisions'] }
+    ];
+    const picked = this.state.picked;
+    const on = '#1D2B53';
+    const off = '#D9D2C2';
+    return {
+      levels: data.map((d) => {
+        const sel = d.id === picked;
+        return {
+          label: d.label,
+          checked: sel ? 'true' : 'false',
+          bg: sel ? '#FFE7A3' : '#FFFFFF',
+          border: sel ? '4px solid #1D2B53' : '3px solid #1D2B53',
+          d1: d.n >= 1 ? on : off,
+          d2: d.n >= 2 ? on : off,
+          d3: d.n >= 3 ? on : off,
+          facts: d.facts.map((t) => ({ t })),
+          pick: () => this.setState({ picked: d.id })
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

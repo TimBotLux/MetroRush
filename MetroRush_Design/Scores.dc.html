@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>MetroRush · Mes records</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1D2B53}a:hover{color:#0F1836}
+</style>
+</helmet>
+<div style="position: relative; width: 844px; height: 390px; overflow: hidden; background: linear-gradient(120deg, #4F2BFF 0%, #A23CFF 40%, #FF3D8B 75%, #FF6A3D 100%); font-family: 'Nunito', sans-serif; color: #FFFFFF; box-sizing: border-box; padding: 20px 40px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; align-items: center; gap: 16px">
+    <a href="Main.dc.html" aria-label="Retour à l'accueil" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #1D2B53">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <h1 style="margin: 0; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 34px">Mes records</h1>
+  </div>
+
+  <div role="table" aria-label="Meilleurs scores par ville et par niveau" style="display: flex; flex-direction: column; gap: 10px">
+    <div role="row" style="display: grid; grid-template-columns: 160px repeat(3, minmax(0, 1fr)); gap: 10px">
+      <span role="columnheader" style="font-weight: 800; font-size: 14px"></span>
+      <span role="columnheader" style="font-weight: 800; font-size: 15px; text-align: center">Facile</span>
+      <span role="columnheader" style="font-weight: 800; font-size: 15px; text-align: center">Moyen</span>
+      <span role="columnheader" style="font-weight: 800; font-size: 15px; text-align: center">Difficile</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div role="row" style="display: grid; grid-template-columns: 160px repeat(3, minmax(0, 1fr)); gap: 10px">
+        <span role="rowheader" style="display: flex; align-items: center; height: 64px; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 24px">{{r.city}}</span>
+        <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="3">
+          <span role="cell" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 64px; border-radius: 18px; background: {{c.bg}}; border: 3px solid {{c.border}}; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: {{c.size}}px; color: {{c.color}}">
+            <sc-if value="{{c.star}}" hint-placeholder-val="{{ false }}">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFC93C" stroke="#C98A00" stroke-width="1.5" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg>
+            </sc-if>
+            {{c.value}}
+          </span>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+  <p style="margin: 0; font-weight: 700; font-size: 14px">Tes records restent sur cet appareil.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const data = [
+      { city: 'Berlin', v: [18, 12, null] },
+      { city: 'Londres', v: [9, null, null] },
+      { city: 'Paris', v: [null, null, null] }
+    ];
+    let best = 0;
+    data.forEach((d) => d.v.forEach((x) => { if (x && x > best) best = x; }));
+    return {
+      rows: data.map((d) => ({
+        city: d.city,
+        cells: d.v.map((x) => ({
+          value: x ? String(x) : 'À jouer',
+          size: x ? 28 : 15,
+          color: x ? '#1D2B53' : '#FFFFFF',
+          bg: x ? '#FFFFFF' : 'rgba(255,255,255,0.12)',
+          border: x ? '#1D2B53' : 'rgba(255,255,255,0.55)',
+          star: x === best
+        }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
