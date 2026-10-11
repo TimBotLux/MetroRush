@@ -1,0 +1,27 @@
+# Déploiement Netlify : le jeu se trouve dans le sous-dossier metrorush/
+[build]
+  base = "metrorush"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Le service worker et le manifeste doivent toujours être relus, sinon les téléphones
+# gardent une ancienne version du jeu.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Content-Type = "application/manifest+json"
+
+# Les fichiers de assets/ changent de nom à chaque build : ils peuvent être gardés en cache longtemps.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

@@ -24,8 +24,9 @@ Cette commande construit la version finale et la sert sur le réseau local (port
 « Network » du type `http://192.168.x.x:4173` : l'ouvrir sur le téléphone, connecté au même Wi-Fi, pour jouer.
 
 **Installer l'application** nécessite une adresse en HTTPS (les navigateurs refusent l'installation et le mode
-hors connexion sur une simple adresse `http://` du réseau local). Publier le dossier `dist/` sur un hébergeur
-HTTPS (Netlify, Vercel, GitHub Pages…), puis sur le téléphone :
+hors connexion sur une simple adresse `http://` du réseau local). Publier le jeu sur un hébergeur HTTPS.
+Avec **Netlify**, importer le dépôt GitHub : le fichier `netlify.toml` à la racine règle tout (dossier
+`metrorush`, commande `npm run build`, dossier publié `dist`). Puis sur le téléphone :
 
 - **Android (Chrome)** : menu ⋮ → « Installer l'application » (ou « Ajouter à l'écran d'accueil »)
 - **iPhone (Safari)** : bouton Partager → « Sur l'écran d'accueil »
