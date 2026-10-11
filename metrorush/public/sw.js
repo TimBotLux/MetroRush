@@ -2,8 +2,8 @@
 // - Pages : réseau d'abord (pour recevoir les mises à jour), copie en cache sinon.
 // - Fichiers du jeu (JS, CSS, icônes) : cache d'abord, ils ont un nom unique à chaque version.
 // - Polices Google : copie en cache, rafraîchie en arrière-plan.
-// Changer VERSION force le remplacement de l'ancien cache.
-const VERSION = 'metrorush-v1';
+// VERSION change à chaque build (remplacé par vite.config.js) : les téléphones remplacent alors l'ancien cache.
+const VERSION = 'metrorush-__BUILD_ID__';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {

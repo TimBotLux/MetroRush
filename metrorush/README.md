@@ -32,7 +32,8 @@ Avec **Netlify**, importer le dépôt GitHub : le fichier `netlify.toml` à la r
 - **iPhone (Safari)** : bouton Partager → « Sur l'écran d'accueil »
 
 Fichiers concernés : `public/manifest.webmanifest` (nom, icônes, plein écran, paysage), `public/sw.js`
-(service worker, cache hors connexion ; changer `VERSION` à chaque publication pour forcer la mise à jour),
+(service worker, cache hors connexion ; sa `VERSION` change automatiquement à chaque build, via `vite.config.js`,
+ce qui force la mise à jour sur les téléphones),
 `public/icons/` (icônes).
 
 ## Organisation
