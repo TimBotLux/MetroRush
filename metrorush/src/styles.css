@@ -411,6 +411,48 @@ button:focus-visible { outline: 3px solid #FFFFFF; outline-offset: 3px; }
 }
 .score-cell.filled { background: #FFFFFF; border-color: var(--navy); color: var(--navy); font-size: 28px; }
 .note { margin: 0; font-weight: 700; font-size: 14px; }
+
+/* ---------- Classement en ligne ---------- */
+.screen-head .tabs { margin-left: auto; height: 42px; }
+.online-submit { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.online-title { font-weight: 800; font-size: 13px; opacity: 0.9; }
+.online-row { display: flex; gap: 8px; }
+.online-row input {
+  width: 190px; height: 42px; padding: 0 12px; border-radius: 14px; border: 3px solid var(--navy);
+  font-family: inherit; font-weight: 800; font-size: 15px; color: var(--navy); background: #FFFFFF;
+  user-select: text; -webkit-user-select: text;
+}
+.online-row .btn-navy { height: 42px; }
+.online-row .btn-navy:disabled { opacity: 0.5; cursor: default; }
+.online-error { font-weight: 800; font-size: 13px; color: #FFE1DC; }
+.online-submit.done { flex-direction: row; align-items: center; gap: 12px; font-weight: 800; font-size: 15px; }
+.online-submit.done .link-btn { padding: 0; height: auto; }
+.online-board { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+.online-filters { display: flex; align-items: center; gap: 12px; }
+.online-filters select {
+  height: 40px; padding: 0 12px; border-radius: 12px; border: 3px solid var(--navy); background: #FFFFFF;
+  color: var(--navy); font-family: inherit; font-weight: 800; font-size: 15px;
+}
+.online-levels { display: flex; gap: 6px; }
+.online-levels button {
+  height: 40px; padding: 0 14px; border-radius: 12px; border: 3px solid var(--navy); background: rgba(255,255,255,0.85);
+  color: var(--navy); font-weight: 800; font-size: 14px;
+}
+.online-levels button.on { background: var(--yellow); }
+.online-list {
+  flex: 1; min-height: 0; margin: 0; padding: 0; list-style: none; overflow-y: auto;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 36px; grid-auto-flow: column;
+  grid-template-rows: repeat(5, 36px); gap: 8px 14px;
+}
+.online-entry {
+  display: flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 12px;
+  background: #FFFFFF; border: 2px solid var(--navy); color: var(--navy); font-weight: 800; font-size: 15px;
+}
+.online-entry.me { background: #FFF3C4; border-color: var(--yellow-shadow); }
+.online-rank { width: 22px; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 18px; }
+.online-player { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.online-entry b { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 20px; }
+.online-msg { grid-column: 1 / -1; font-weight: 800; font-size: 15px; }
 .note.sm { font-size: 13px; line-height: 1.4; }
 
 /* ---------- Paramètres ---------- */

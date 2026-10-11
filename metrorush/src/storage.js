@@ -4,7 +4,7 @@ const KEY = 'metrorush.v1';
 
 const DEFAULT = {
   scores: {},
-  settings: { son: true, musique: true, vibrations: false, mouvement: true, langue: 'fr' },
+  settings: { son: true, musique: true, vibrations: false, mouvement: true, langue: 'fr', pseudo: '' },
   tutorialSeen: false,
   last: null
 };

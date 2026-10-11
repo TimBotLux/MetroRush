@@ -73,6 +73,16 @@ de ville (`STYLES`, une entrée par clé de `CITIES`) modulée par la difficult�
 l'heure de pointe. `audio.setTheme(city, level)` avant `startMusic()`. Le contexte audio est débloqué au premier
 geste (`main.jsx`).
 
+**Classement en ligne (Supabase).** `src/leaderboard.js` appelle directement l'API REST de Supabase (pas de
+bibliothèque) : `fetchTop` lit la vue `leaderboard_best` (meilleur score de chaque joueur par ville et niveau),
+`submitScore` ajoute une ligne à la table `leaderboard` et calcule le rang. Schéma, règles RLS (lecture et ajout
+publics seulement) et vue dans `supabase/leaderboard.sql`. Configuration par `VITE_SUPABASE_URL` et
+`VITE_SUPABASE_ANON_KEY` (`metrorush/.env.local` en dev, variables d'environnement Netlify en production, modèle
+dans `.env.example`) ; sans clé, `leaderboardEnabled` est faux et toute l'interface en ligne est masquée.
+L'envoi se fait depuis l'écran de résultats (`components/OnlineSubmit.jsx`, pseudo mémorisé dans
+`settings.pseudo`), la consultation dans l'onglet « En ligne » de l'écran des records
+(`components/OnlineBoard.jsx`). Serveur MCP Supabase déclaré dans `.mcp.json`.
+
 **PWA.** `public/manifest.webmanifest`, `public/icons/`, `public/sw.js` (enregistré seulement en production
 dans `main.jsx`). `public/sw.js` contient deux marqueurs que le plugin `serviceWorkerVersion` de
 `vite.config.js` remplace dans `dist/sw.js` : `__BUILD_ID__` (date et heure du build, pour que les téléphones

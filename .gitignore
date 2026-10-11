@@ -2,6 +2,10 @@
 node_modules/
 dist/
 
+# Variables d'environnement locales (clés Supabase de développement)
+.env.local
+.env.*.local
+
 # Configuration locale de Claude Code et de l'éditeur
 .claude/
 .vscode/

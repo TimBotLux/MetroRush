@@ -21,6 +21,8 @@ export default function App() {
   const [afterTutorial, setAfterTutorial] = useState('city');
   const [gameId, setGameId] = useState(0);
   const [result, setResult] = useState(null);
+  // Écran des records : onglet affiché, et ville / niveau du classement en ligne
+  const [scoresView, setScoresView] = useState({ tab: 'local', city, level });
 
   const update = useCallback((fn) => {
     setData((d) => {
@@ -36,6 +38,7 @@ export default function App() {
   const t = useMemo(() => translator(lang), [lang]);
   useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   const setLang = (l) => update((d) => ({ ...d, settings: { ...d.settings, langue: l } }));
+  const setPseudo = (p) => update((d) => ({ ...d, settings: { ...d.settings, pseudo: p } }));
 
   const startGame = (c, l) => {
     setCity(c);
@@ -109,11 +112,16 @@ export default function App() {
     case 'results':
       content = (
         <Results result={result} onReplay={() => startGame(city, level)}
-          onChangeLevel={() => setScreen('level')} onHome={() => setScreen('home')} />
+          onChangeLevel={() => setScreen('level')} onHome={() => setScreen('home')}
+          pseudo={data.settings.pseudo} onPseudo={setPseudo}
+          onSeeBoard={() => { setScoresView({ tab: 'online', city, level }); setScreen('scores'); }} />
       );
       break;
     case 'scores':
-      content = <Scores scores={data.scores} onBack={() => setScreen('home')} />;
+      content = (
+        <Scores scores={data.scores} onBack={() => setScreen('home')}
+          view={scoresView} onView={setScoresView} pseudo={data.settings.pseudo} />
+      );
       break;
     case 'settings':
       content = (

@@ -2,6 +2,7 @@ import React from 'react';
 import { LEVELS } from '../data.js';
 import { useT } from '../i18n.jsx';
 import { ReplayIcon, StarIcon } from '../components/Icons.jsx';
+import OnlineSubmit from '../components/OnlineSubmit.jsx';
 
 function subtitle(r, t) {
   if (r.gameOver) return t('subGameOver');
@@ -11,7 +12,7 @@ function subtitle(r, t) {
   return t('subAgain');
 }
 
-export default function Results({ result: r, onReplay, onChangeLevel, onHome }) {
+export default function Results({ result: r, onReplay, onChangeLevel, onHome, pseudo, onPseudo, onSeeBoard }) {
   const t = useT();
   const stats = [
     { label: t('score'), value: r.score },
@@ -31,6 +32,7 @@ export default function Results({ result: r, onReplay, onChangeLevel, onHome }) 
           {r.isRecord && (
             <div className="record-badge"><StarIcon />{t('newRecord')}</div>
           )}
+          <OnlineSubmit result={r} pseudo={pseudo} onPseudo={onPseudo} onSeeBoard={onSeeBoard} />
         </div>
         <div className="stats">
           {stats.map((s) => (
